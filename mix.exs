@@ -3,8 +3,8 @@ defmodule Openlibrary.Mixfile do
 
   def project do
     [app: :openlibrary,
-     version: "0.1.1",
-     elixir: "~> 1.3",
+     version: "0.1.2",
+     elixir: "~> 1.11",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
@@ -24,11 +24,11 @@ defmodule Openlibrary.Mixfile do
 
   defp deps do
     [
-      {:httpoison, "~> 0.10"},
-      {:isbn, ">= 0.1.0"},
-      {:poison, "~> 3.0"},
+      {:httpoison, "~> 1.7.0"},
+      {:isbnex, ">= 0.2.0"},
+      {:poison, "~> 4.0.1"},
 
-      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:ex_doc, ">= 0.23.0", only: :dev},
     ]
   end
 

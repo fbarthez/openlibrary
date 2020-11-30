@@ -34,7 +34,7 @@ defmodule Openlibrary.Book do
       # %{ title: "The Eye of the World", authors: [%{}, %{}], ... }
 
   """
-  def find_by_lccn(lccn) do 
+  def find_by_lccn(lccn) do
     find_by_bibkey("LCCN:#{lccn}")
   end
 
@@ -45,22 +45,29 @@ defmodule Openlibrary.Book do
       # %{ title: "The Eye of the World", authors: [%{}, %{}], ... }
 
   """
-  def find_by_oclc(oclc) do 
+  def find_by_oclc(oclc) do
     find_by_bibkey("OCLC:#{oclc}")
   end
 
   # Returns a map after fetching book information for a given key, which can be
   # ISBN, LCCN, or OCLC.
-  defp find_by_bibkey(bibkey) do 
+  defp find_by_bibkey(bibkey) do
     "#{@api_url}/books?bibkeys=#{bibkey}&jscmd=data&format=json"
     |> fetch_json()
-    |> Map.get(bibkey)
+    |> Map.get(String.to_atom(bibkey))
   end
 
   defp fetch_json(url) do
-    url
-    |> HTTPoison.get!
-    |> Map.get(:body)
-    |> Poison.decode!
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        body
+        |> Poison.decode!(keys: :atoms)
+      {:ok, %HTTPoison.Response{status_code: status_code, body: body}} ->
+        IO.puts("Received HTTP request with status code other than 200: #{status_code}\n#{body}")
+        %{}
+      {:error, _} ->
+        IO.puts("HTTP error")
+        %{}
+    end
   end
 end

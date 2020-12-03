@@ -1,4 +1,6 @@
 defmodule Openlibrary.Book do
+  require Logger
+
   @moduledoc """
   Provides functions to find books from OpenLibrary.org by ISBN, LCCN, or OCLC identifiers.
   """
@@ -21,6 +23,7 @@ defmodule Openlibrary.Book do
   """
   def find_by_isbn(isbn) do
     if ISBN.valid?(isbn) do
+      Logger.debug("Calling Openlibrary API for ISBN #{isbn}")
       find_by_bibkey("ISBN:#{isbn}")
     else
       :invalid_isbn
